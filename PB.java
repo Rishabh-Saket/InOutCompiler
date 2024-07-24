@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 
 class PB extends JFrame {
@@ -97,6 +99,21 @@ class PB extends JFrame {
         setLocation(10, 10);
         setSize(1024, 768);
         setVisible(true);
+
+        compileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev)
+            {
+                try 
+                {
+                    File tmpFolder=new File("tmp");
+                    if(tmpFolder.exists() && tmpFolder.isDirectory()==false) tmpFolder.delete();
+                    if(tmpFolder.exists()==false) tmpFolder.mkdir();
+                } catch (Exception e) 
+                {
+                    System.out.println(e);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

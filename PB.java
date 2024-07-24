@@ -108,6 +108,27 @@ class PB extends JFrame {
                     File tmpFolder=new File("tmp");
                     if(tmpFolder.exists() && tmpFolder.isDirectory()==false) tmpFolder.delete();
                     if(tmpFolder.exists()==false) tmpFolder.mkdir();
+
+                    String src="ci102d.c";
+                    File srcFile=new File("tmp"+File.separator+src);
+                    if(srcFile.exists()) srcFile.delete();
+                    RandomAccessFile randomAccessFile=new RandomAccessFile(srcFile, "rw");
+                    randomAccessFile.writeBytes(program.getText());
+                    randomAccessFile.close();
+
+
+
+
+                    String out="out.exe";
+
+                    ProcessBuilder processBuilder=new ProcessBuilder();
+                    processBuilder.directory(tmpFolder);
+                    processBuilder.command(gcc,src,"-o",out);
+
+                    Process process=processBuilder.start();
+                    process.waitFor();
+                    JOptionPane.showMessageDialog(PB.this, "Done");
+
                 } catch (Exception e) 
                 {
                     System.out.println(e);

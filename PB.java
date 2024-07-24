@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 
 class PB extends JFrame {
 
@@ -26,7 +27,20 @@ class PB extends JFrame {
     private JPanel centerPanel;
     private JPanel bottomPanel;
 
-    PB() {
+    private String gccHome;
+    private String gcc;
+
+    PB(String gccHome) 
+    {
+        this.gccHome=gccHome;
+        if(gccHome.endsWith("\\") || gccHome.endsWith("/"))
+        {
+            this.gcc=gccHome+"bin"+File.separator+"gcc.exe";
+        }
+        else
+        {
+            this.gcc=gccHome+File.separator+"bin"+File.separator+"gcc.exe";
+        }
         programLabel = new JLabel("Program");
         program = new JTextArea();
         programPanel = new JPanel();

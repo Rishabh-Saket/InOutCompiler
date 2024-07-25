@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.*;
 
 class PB extends JFrame {
 
@@ -118,18 +119,83 @@ class PB extends JFrame {
                     randomAccessFile.writeBytes(program.getText());
                     randomAccessFile.close();
 
-
-
-
                     String out="out.exe";
 
                     ProcessBuilder processBuilder=new ProcessBuilder();
                     processBuilder.directory(tmpFolder);
-                    processBuilder.command(gcc,src,"-o",out);
+
+                    java.util.List<String> list=new ArrayList<>();
+                    list.add(gcc);
+                    list.add(src);
+                    list.add("-o");
+                    list.add(out);
+                    processBuilder.command(list);
+
+                    File stderr=new File("err.data");
+                    if(stderr.exists()) stderr.delete();
+                    error.setText("");
+                    processBuilder.redirectError(stderr);
 
                     Process process=processBuilder.start();
                     process.waitFor();
-                    JOptionPane.showMessageDialog(PB.this, "Done");
+
+                    if(stderr.exists())
+                    {
+                        RandomAccessFile errRandomAccessFile=new RandomAccessFile(stderr, "r");
+                        while(errRandomAccessFile.getFilePointer()<errRandomAccessFile.length()) 
+                        {
+                            error.append(errRandomAccessFile.readLine()+"\r\n");
+                        }
+                        errRandomAccessFile.close();
+                        stderr.delete();
+                    }
+
+                    JOptionPane.showMessageDialog(PB.this, "Compilation Done");
+
+                } catch (Exception e) 
+                {
+                    System.out.println(e);
+                }
+            }
+        });
+
+        executeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev)
+            {
+                try 
+                {
+                    File tmpFolder=new File("tmp");
+                    String out="out.exe";
+                    File outFile = new File(tmpFolder, out);
+                    if (!outFile.exists()) {
+                        JOptionPane.showMessageDialog(PB.this, "Executable not found. Please compile first.");
+                        return;
+                    }
+
+                    ProcessBuilder processBuilder = new ProcessBuilder();
+                    processBuilder.directory(tmpFolder);
+                    java.util.List<String> list = new ArrayList<>();
+                    list.add(outFile.getAbsolutePath());
+                    processBuilder.command(list);
+
+                    File stdout = new File("output.data");
+                    if (stdout.exists()) stdout.delete();
+                    output.setText("");
+                    processBuilder.redirectOutput(stdout);
+
+                    Process process = processBuilder.start();
+                    process.waitFor();
+
+                    if (stdout.exists()) {
+                        RandomAccessFile outRandomAccessFile = new RandomAccessFile(stdout, "r");
+                        while (outRandomAccessFile.getFilePointer() < outRandomAccessFile.length()) {
+                            output.append(outRandomAccessFile.readLine() + "\r\n");
+                        }
+                        outRandomAccessFile.close();
+                        stdout.delete();
+                    }
+
+                    JOptionPane.showMessageDialog(PB.this, "Execution Done");
 
                 } catch (Exception e) 
                 {

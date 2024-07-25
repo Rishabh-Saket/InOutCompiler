@@ -58,6 +58,7 @@ class PB extends JFrame {
         outputPanel.add(outputLabel, BorderLayout.NORTH);
         outputPanel.add(new JScrollPane(output), BorderLayout.CENTER);
         output.setEditable(false);
+        output.setForeground(Color.green);
         outputPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
         inputLabel = new JLabel("Input");
@@ -75,6 +76,7 @@ class PB extends JFrame {
         errorPanel.add(errorLabel, BorderLayout.NORTH);
         errorPanel.add(new JScrollPane(error), BorderLayout.CENTER);
         error.setEditable(false);
+        error.setForeground(Color.red);
         errorPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
         centerPanel = new JPanel();
